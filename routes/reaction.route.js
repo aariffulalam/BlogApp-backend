@@ -1,10 +1,11 @@
 const {Router} = require('express');
 const router = new Router();
 
-const {reaction} = require('../controller/reaction.controller')
-const {likeOrDislike} = require("../middleware/likeOrDislike")
+const {reaction, updateReaction} = require('../controller/reaction.controller')
+const {likeOrDislike} = require('../middleware/alreadyLikeOrDislike')
+
+router.post('/:id', reaction)
+router.patch('/:id', likeOrDislike, updateReaction)
 
 
-router.post('/:id',likeOrDislike,reaction)
-
-module.exports = router;
+module.exports = router;    

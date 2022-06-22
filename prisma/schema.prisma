@@ -41,6 +41,6 @@ model Reaction{
   id Int @id @default(autoincrement())
   like Boolean @default(false)
   dislike Boolean @default(false)
-  userid Int
+  userid Int 
   postid Int
 }
