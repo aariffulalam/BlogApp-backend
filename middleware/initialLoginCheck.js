@@ -39,6 +39,15 @@ const initialLoginCheck = async(req, res, next) =>{
                 error:"user is not exist"
             })
         }
+
+    const user = await prisma.user.findUnique({
+        where:{
+            email
+        }
+    })
+    if (!user.verified){
+        return res.status(400).json({title:"error", error:"user is not verified."})
+    }
     next()
 }
 module.exports = {initialLoginCheck}

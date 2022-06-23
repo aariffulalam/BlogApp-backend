@@ -27,6 +27,7 @@ const signUp = async (req, res)=>{
                 phoneNumber,
                 email,
                 password : hashedPassword,
+                otp,
                 gender,
                 dateOfBirth,
                 bio
@@ -45,6 +46,34 @@ const signUp = async (req, res)=>{
             message:"fat gaya",
             error : error.message
         })
+    }
+}
+
+
+const verify =  async(req, res)=>{
+    const {email, otp} = req.body;
+    try {
+        
+        const user = await prisma.user.findUnique({
+            where:{
+                email
+            }
+        })
+        if (user.otp !== otp){
+            return res.status(400).json({title:"error", error: "otp didn't matched."})
+        }
+        // console.log(typeof(user.id))
+        await prisma.user.update({
+            where:{
+                id : parseInt(user.id)
+            },
+            data:{
+                verified: true
+            }
+        })
+        res.status(201).json({title:"verification", message:"user verified"})
+    } catch (error) {
+        res.status(400).json({title:"error",error:error.message})
     }
 }
 
@@ -81,4 +110,4 @@ const logIn = async ( req, res)=>{
     }
 }
 
-module.exports = {signUp,logIn}
+module.exports = {signUp, verify, logIn}
