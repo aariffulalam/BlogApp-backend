@@ -1,11 +1,10 @@
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const upload = async (req, res)=>{
+const uploadBlog = async (req, res)=>{
     const {id} = req.params
     const data = req.body
     try {
-        
         const post = await prisma.blog.create({
             data:{
                 title:data.title,
@@ -20,4 +19,23 @@ const upload = async (req, res)=>{
     }
 }
 
-module.exports = {upload}
+const updateBlog = async (req, res)=>{
+    console.log("i am working")
+    const {id} = req.params;
+    const data = req.body;
+    // console.log(typeof id)
+    try {
+        // console.log(data)
+        const update = await prisma.blog.updateMany({
+            where:{
+                id : parseInt(id)
+            },
+            data
+        })
+        res.status(201).json({title:"blog", message:"Blog updated successfully."})
+    } catch (error) {
+        res.send(error.message)
+    }
+}
+
+module.exports = {uploadBlog, updateBlog}

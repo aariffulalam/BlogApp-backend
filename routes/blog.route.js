@@ -1,8 +1,10 @@
 const {Router} = require('express');
 const router = new Router();
 
-const {upload} = require('../controller/blog.controller')
+const {uploadBlog, updateBlog} = require('../controller/blog.controller')
 
-router.use('/upload/:id',upload)
+
+router.post('/:id',uploadBlog)
+router.patch('/:id', updateBlog)
 
 module.exports = router;
