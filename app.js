@@ -1,8 +1,13 @@
 const express = require('express');
 const {config} = require('./config/config')
+const cors= require('cors');
+// const { urlencoded } = require('express');
 
 const app = express();
+app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({extended:false}))
+app.use(express.static('public'))
 
 const port = config.port || 8000
 // const port =  8000

@@ -9,6 +9,7 @@ const {initialVerifyCheck} = require('../middleware/intialVerifyCheck')
 
 router.post('/signup',initialUserCheck, userExist, signUp);
 router.get('/verify',initialVerifyCheck, verify)
-router.get('/login', initialLoginCheck, logIn)
+router.post('/login', initialLoginCheck, logIn)
+// router.post('/login',  logIn)
 
 module.exports = router;

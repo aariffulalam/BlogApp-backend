@@ -6,13 +6,17 @@ const {isValidPassword} = require('../validation/password.validation')
 
 const initialLoginCheck = async(req, res, next) =>{
     const {email, password} = req.body;
+    console.log(email, password)
+    // const email = "sajjad21@navgurukul.org"
+    // const password = "@Sajjad123"
     if (
         typeof email !== "string" ||
         typeof password !== "string"
         ){
             return res.status(400).json({
+                email:{email},
                 title: "error",
-                error:"name or email or password's type is not valid"
+                error:"email or password's invalid"
             })
         }
     if (!(isValidEmail(email))){
@@ -36,6 +40,7 @@ const initialLoginCheck = async(req, res, next) =>{
             console.log("user is not exist.")
             return res.status(400).json({
                 title:"error",
+                email,
                 error:"user is not exist"
             })
         }

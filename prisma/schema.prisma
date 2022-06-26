@@ -37,6 +37,8 @@ model Blog{
   authorId Int 
   likes Int @default(0)
   dislikes Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Reaction{

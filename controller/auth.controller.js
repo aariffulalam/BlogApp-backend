@@ -35,7 +35,7 @@ const signUp = async (req, res)=>{
         })
         // console.log(hashedPassword)
         await sendmail(email,otp)
-        await sendsms(phoneNumber, otp)
+        // await sendsms(phoneNumber, otp)
         res.status(201).json({
             title:"SignedUp",
             message:user
@@ -80,6 +80,9 @@ const verify =  async(req, res)=>{
 
 const logIn = async ( req, res)=>{
     const {email, password} = req.body;
+    // const email = "sajjad21@navgurukul.org"
+    // const password = "@Sajjad123"
+    // console.log(email, password)
     try {
         const user = await prisma.user.findUnique({
             where:{
