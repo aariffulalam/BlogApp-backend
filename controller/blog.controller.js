@@ -15,17 +15,19 @@ const blogs = async (req, res)=>{
 const uploadBlog = async (req, res)=>{
     const {id} = req.params
     const data = req.body
-    const imagesPath = req.files.map((file)=>{
-        return file.path
-    })
-    console.log(id)
-    console.log(data.image)
+    const imagePath = req.file.path.split("/")[1]
+    console.log(imagePath)
+    // const imagesPath = req.files.map((file)=>{
+    //     return file.path
+    // })
+    // console.log(id)
+    // console.log(data, res.files)
     try {
         const post = await prisma.blog.create({
             data:{
                 title:data.title,
                 blog : data.blog,
-                image : imagesPath[0].split("/")[1],
+                image : imagePath,
                 authorId : parseInt(id)
             }
         }) 

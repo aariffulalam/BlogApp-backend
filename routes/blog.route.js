@@ -5,7 +5,7 @@ const {blogs, uploadBlog, updateBlog} = require('../controller/blog.controller')
 const {upload} = require('../middleware/multer')
 
 router.get("/",blogs)
-router.post('/:id',upload.array("image"),uploadBlog)
+router.post('/:id',upload.single("image"),uploadBlog)
 router.patch('/:id', updateBlog)
 
 module.exports = router;

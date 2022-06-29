@@ -35,7 +35,7 @@ const signUp = async (req, res)=>{
         })
         // console.log(hashedPassword)
         await sendmail(email,otp)
-        // await sendsms(phoneNumber, otp)
+        await sendsms(phoneNumber, otp)
         res.status(201).json({
             title:"SignedUp",
             message:user

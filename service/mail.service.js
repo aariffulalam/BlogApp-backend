@@ -15,8 +15,8 @@ const sendmail = async (to, otp)=>{
     const mailDetails = {
         from : config.nodemailerUser,
         to,
-        subject : "Blog App : Verify your account.",
-        text:`Dear user, this mail is from Blog app. Here is your OTP ${otp} for to enjoy Blog application verify your account.`
+        subject : "Blog App : Verify your Blog application account.",
+        text:`Dear user, this mail is from Blog app. Here is your OTP ${otp} verify your account and enjoy amazing services from Blog app.`
     }
     transport.sendMail(mailDetails, (err, res)=>{
         if (err){
