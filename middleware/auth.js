@@ -1,24 +1,55 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const {config} =require('../config/config')
 
-const generateToken = (id)=>{
-    return jwt.sign(id,config.secretKey)    
+const generateToken = (id, name, email)=>{
+    return jwt.sign({id, name, email},config.secretKey)    
 }
 
 const verifyToken = (req, res, next) =>{
-    const cookie = req.header.cookie
-
-    if (cookie){
-        const token = cookie.splite("=")[1]
-        const id = parseInt(jwt.verify(token,SECRET_KEY)) 
-        req.userId = id
+    try {
+        // console.log(req.headers)
+        const cookie = req.headers.authorization
+        // console.log(cookie)
+        if (!cookie){
+            res.status(401).json({
+                status:"unauthorized"
+            })
+        }
+        const token = cookie.split(" ")[1]
+        // console.log(token)  
+        const decode = jwt.verify(token,config.secretKey)
+        // console.log(decode)
+        req.userValues = decode
+        console.log("i am verification")
         next()
-    }
-    else{
-        res.status(401).json({
-            status:"unauthorized"
-        })
+    } catch (error) {
+        return res.status(500).json({title:"error", message:error})
     }
 }
 
-module.exports = {generateToken, verifyToken}
+const cofirmSelf = async(req, res, next) =>{
+    console.log(req.userValues)
+    console.log("i am working here in cofirmSelf")
+    try {
+    const authUserId = req.userValues.id
+    const blogId = parseInt(req.params.id)
+        const blogData = await prisma.blog.findFirst({
+            where:{
+                id : blogId
+            }
+        })
+        console.log(blogData.authorId)
+        console.log(authUserId)
+        if (authUserId === blogData.authorId){
+            console.log(" in the end")
+            next()
+        }
+        return res.status(401).json({title:"error", message:"this is not author, invalid action"})
+    } catch (error) {
+        return res.status(400).json({title:"error", message:error})
+    }
+}
+
+module.exports = {generateToken, verifyToken, cofirmSelf}

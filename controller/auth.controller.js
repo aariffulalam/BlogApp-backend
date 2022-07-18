@@ -80,9 +80,6 @@ const verify =  async(req, res)=>{
 
 const logIn = async ( req, res)=>{
     const {email, password} = req.body;
-    // const email = "sajjad21@navgurukul.org"
-    // const password = "@Sajjad123"
-    // console.log(email, password)
     try {
         const user = await prisma.user.findUnique({
             where:{
@@ -92,13 +89,16 @@ const logIn = async ( req, res)=>{
         const match = await bcrypt.compare(password, user.password)
         // console.log(match)
         if (match){
-            // console.log(user.id)
-            const token = generateToken(user.id)
-            // console.log(token)
-            res.cookie("authToken",token)
+            console.log(user.id)
+            const token = generateToken(user.id, user.name, user.email)
+            console.log("i am token -> ", token)
+            // res.cookie("authToken",token)
+            console.log("i am work")
+            
             res.status(201).json({
                 title:"LogedIn",
-                message:user
+                data:user,
+                token:token
             })
         }
         else{

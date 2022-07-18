@@ -1,11 +1,14 @@
 const {Router} = require('express');
 const router = new Router();
 
-const {blogs, uploadBlog, updateBlog} = require('../controller/blog.controller')
-const {upload} = require('../middleware/multer')
+const {verifyToken, cofirmSelf} = require('../middleware/auth');
 
-router.get("/",blogs)
-router.post('/:id',upload.single("image"),uploadBlog)
-router.patch('/:id', updateBlog)
+const {blogs, uploadBlog, updateBlog, deleteBlog} = require('../controller/blog.controller');
+const {upload} = require('../middleware/multer');
+
+router.get("/",blogs);
+router.post('/create', verifyToken, upload.single("image"),uploadBlog);
+router.patch('/:id', verifyToken, updateBlog);
+router.delete('/:id',verifyToken,cofirmSelf,deleteBlog);
 
 module.exports = router;
