@@ -9,7 +9,7 @@ const generateToken = (id, name, email)=>{
 
 const verifyToken = (req, res, next) =>{
     try {
-        // console.log(req.headers)
+        // console.log("i am verifytoken  " , req.headers.authorization)
         const cookie = req.headers.authorization
         // console.log(cookie)
         if (!cookie){
@@ -25,30 +25,34 @@ const verifyToken = (req, res, next) =>{
         console.log("i am verification")
         next()
     } catch (error) {
-        return res.status(500).json({title:"error", message:error})
+        res.status(500).json({title:"error", message:error})
     }
 }
 
 const cofirmSelf = async(req, res, next) =>{
-    console.log(req.userValues)
     console.log("i am working here in cofirmSelf")
+    // console.log(req.userValues.id)
     try {
-    const authUserId = req.userValues.id
-    const blogId = parseInt(req.params.id)
+        // const authUserId = req.userValues.id
+        console.log(typeof req.userValues.id)
+        const authUserId = req.userValues.id
+        const blogId = parseInt(req.params.id)
+        // console.log(blogId)
         const blogData = await prisma.blog.findFirst({
             where:{
-                id : blogId
+                id : blogId,
+
             }
         })
-        console.log(blogData.authorId)
-        console.log(authUserId)
-        if (authUserId === blogData.authorId){
-            console.log(" in the end")
-            next()
+        console.log(typeof blogData.authorId)
+        // console.log(authUserId)
+        if (authUserId !== blogData.authorId){
+            return res.status(401).json({title:"error", message:"this is not author, invalid action"})
         }
-        return res.status(401).json({title:"error", message:"this is not author, invalid action"})
+        console.log(" in the end")
+        next()
     } catch (error) {
-        return res.status(400).json({title:"error", message:error})
+        res.status(400).json({title:"error", message:error})
     }
 }
 

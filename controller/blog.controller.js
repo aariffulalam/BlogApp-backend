@@ -31,9 +31,9 @@ const uploadBlog = async (req, res)=>{
 
             }
         }) 
-        res.status(201).json({title:"blog", message:"blog created succefully.",post:post})
+        return res.status(201).json({title:"blog", message:"blog created succefully.",post:post})
     } catch (error) {
-        res.status(400).json({title:"error", message:"kuch to fat gaya blog upload me", "error":error.message, })
+        return res.status(400).json({title:"error", message:"kuch to fat gaya blog upload me", "error":error.message, })
     }
 }
 
@@ -49,9 +49,9 @@ const updateBlog = async (req, res)=>{
             },
             data
         })
-        res.status(201).json({title:"blog", message:"Blog updated successfully."})
+        return res.status(201).json({title:"blog", message:"Blog updated successfully."})
     } catch (error) {
-        res.send(error.message)
+        return res.send(error.message)
     }
 }
 
@@ -66,7 +66,7 @@ const deleteBlog = async (req, res)=>{
             }
         })
         console.log("i am deleted blog  ",deleteblog)
-        res.status(201).json({title:"successfully blog delted ", message:"deleteblog"})
+        res.status(200).json({title:"successfully blog delted ", message:"deleteblog"})
     } catch (error) {
         res.status(400).json({title:"Error", message:error})
     }
