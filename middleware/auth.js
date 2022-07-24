@@ -11,7 +11,9 @@ const verifyToken = (req, res, next) =>{
     try {
         // console.log("i am verifytoken  " , req.headers.authorization)
         const cookie = req.headers.authorization
-        // console.log(cookie)
+        console.log(cookie)
+        console.log("token",req.body)
+
         if (!cookie){
             res.status(401).json({
                 status:"unauthorized"
@@ -22,7 +24,7 @@ const verifyToken = (req, res, next) =>{
         const decode = jwt.verify(token,config.secretKey)
         // console.log(decode)
         req.userValues = decode
-        console.log("i am verification")
+        // console.log("i am verification")
         next()
     } catch (error) {
         res.status(500).json({title:"error", message:error})
@@ -55,5 +57,6 @@ const cofirmSelf = async(req, res, next) =>{
         res.status(400).json({title:"error", message:error})
     }
 }
+
 
 module.exports = {generateToken, verifyToken, cofirmSelf}
