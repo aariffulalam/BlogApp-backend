@@ -16,45 +16,77 @@ const getReaction = async (req, res)=>{
 }
 
 const reaction = async (req, res)=>{
+    // console.log(req.userValues.id)
+    // console.log(req.userValues)
     const {postid} = req.params
-    const {userid, like, dislike} = req.body;
+    const {like, dislike} = req.body;
+    console.log(like, dislike)
     try {
-        console.log(postid, userid, like, dislike)
+        // console.log( " i am console.log()")
+        // console.log(postid, like, dislike)
         const reactionData = await prisma.reaction.findMany({
             where:{
                 postid:parseInt(postid),
-                userid
+                userid : req.userValues.id
             }
         })
-        console.log(" i am working 1", reactionData)
+        // console.log(" i am working 1", reactionData)
         if (reactionData.length === 0){
+            console.log("i am if")
             const createReaction = await prisma.reaction.create({
                 data:{
                     like,
                     dislike,
                     postid:parseInt(postid),
-                    userid
+                    userid: req.userValues.id
                 }        
             })
-            console.log( "working 2", createReaction)
+            // console.log( "working 2", createReaction)
         }
         else{
-            // try {
-                console.log("i am inside else part")
-                const updateReaction = await prisma.reaction.updateMany({
-                    where:{
-                        postid:parseInt(postid),
-                        userid
-                    },
-                    data:{
-                        like,
-                        dislike,
-                    }
-                })
-            
-            
+            console.log("i am else")
+            // console.log("i am inside else part")
+            const reaction = await prisma.reaction.findFirst({
+                where:{
+                    userid:req.userValues.id,
+                    postid : parseInt(postid)
+                }
+            })
+            // console.log("i am working")
+            // console.log(reaction)
+            console.log("i am working")
+            let l;
+            let d;
+            // console.log(like, dislike)
+            if (like){
+                console.log("if")
+                l = reaction.like ? false : true;
+                if (l){
+                    d = false
+                }
+                // d = //l ?? false
+                console.log(l, d)
+            }
+            else{
+                console.log("else")
+                d = reaction.dislike? false : true;
+                if (d){
+                    l = false
+                }
+                // l = d ?? false
+                console.log(l, d)
+            }
+            const updateReaction = await prisma.reaction.updateMany({
+                where:{
+                    postid:parseInt(postid),
+                    userid:req.userValues.id
+                },
+                data:{
+                    like : l,   
+                    dislike : d,
+                }
+            })
         }
-        // console.log(" i am working 2")
         const likecount = like ? 1 :0
         const dislikecount = dislike ? 1 :0
         const blog = await prisma.blog.findUnique({
@@ -62,9 +94,6 @@ const reaction = async (req, res)=>{
                 id:parseInt(postid)
             }
         })
-        // console.log(" i am working 3", blog)
-        // console.log(likecount, dislikecount)
-        // try {  
             const updateBlog = await prisma.blog.update({
                 where:{
                     id:parseInt(postid)
@@ -74,18 +103,8 @@ const reaction = async (req, res)=>{
                     dislikes: blog.dislikes + dislikecount
                 }
             })
-            // const updateBlog = await prisma.blog.findMany({
-                //     where:{
-                    //         id:parseInt(postid)
-                    //     }
-                    // })
-                    
-                    // console.log("i am working 4", updateBlog)
-                    res.status(201).json({title:"reaction", message:"reacted succesfully."})
-                // } catch (error) {
-                //     console.log(" i am another try catch error", error.message)
-                // }
-                // console.log("outsider console.log()")
+            res.status(201).json({title:"reaction", message:"reacted succesfully."})
+                
     } catch (error) {
         res.status(400).json({title:"error", message:error})
     }
